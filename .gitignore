@@ -6,3 +6,4 @@ enviroment/
 */.pyo
 */.egg-info
 */.git
+db.sqlite3
