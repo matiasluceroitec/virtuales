@@ -3,6 +3,7 @@
 {% block title %} Products List {% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <table class="table">
   <thead>
     <tr>
@@ -13,15 +14,18 @@
     </tr>
   </thead>
   <tbody>
-    {% for product in products %}
-      <tr>
-        <td scope="row">{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-        <td>{{ product.stock }}</td>
-        <td><a href="{% url 'product_detail' product.id %}" class="fa fa-eye" aria-hidden="true"> Ver </a></td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+      {% for product in products %}
+        <tr>
+          <td scope="row">{{ product.name }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.stock }}</td>
+          <td><a href="{% url 'product_detail' product.id %}" class="fa fa-eye" aria-hidden="true"> Ver </a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+      <h5>Usted no se encuentra logeado para acceder</h5>
+  {% endif %}
+  
 {% endblock %}
