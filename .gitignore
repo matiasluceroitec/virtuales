@@ -11,6 +11,7 @@ db.sqlite3
 # Compiled Python files
 __pycache__/
 *.py[cod]
+*/__pycache__
 
 # Base de datos local
 db.sqlite3
