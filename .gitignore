@@ -7,3 +7,22 @@ enviroment/
 */.egg-info
 */.git
 db.sqlite3
+
+# Compiled Python files
+__pycache__/
+*.py[cod]
+
+# Base de datos local
+db.sqlite3
+
+# Archivos de entorno
+.env
+*.env
+
+# Archivos de configuración locales
+*.vscode/
+*.idea/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
