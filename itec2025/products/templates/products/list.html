@@ -3,7 +3,6 @@
 {% block title %} Products List {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
 <table class="table">
   <thead>
     <tr>
@@ -24,9 +23,5 @@
       {% endfor %}
     </tbody>
   </table>
-  <h2> El valor de todos los productos es ${{sum_products}}</h2>
-  {% else %}
-      <h5>Usted no se encuentra logeado para acceder</h5>
-  {% endif %}
-  
+  <h3>El total del valor de los productos es ${{total_price}}</h3>
 {% endblock %}
