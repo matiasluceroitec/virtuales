@@ -19,7 +19,15 @@
                 <a  href="{% url 'order_list' %}">Pedidos</a>
             </li>
         </nav>
-
+        {% if messages %}
+          {% for message in messages %}
+              {%if message.tags == 'error' %}
+                  <div class="alert alert-danger" >{{message}}</div>
+              {% else %}
+                  <div class="alert alert-{{message.tags}}" >{{message}}</div>
+              {% endif %}
+          {% endfor %}
+      {% endif %}
       {% block content %}{% endblock %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
