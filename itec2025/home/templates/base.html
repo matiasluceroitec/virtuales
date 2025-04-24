@@ -11,14 +11,21 @@
   </head>
   <body>
         <nav class="navbar navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Home</a>
-            <li>
-                <a href="{% url 'product_list' %}">Products</a>
-            </li>
-            <li>
-                <a  href="{% url 'order_list' %}">Pedidos</a>
-            </li>
+            <a class="navbar-brand" href="{% url 'index' %}"> Home </a>
+            {% if user.is_authenticated %}
+              <li>
+                  <a href="{% url 'product_list' %}"> Products </a>
+              </li>
+              <li>
+                  <a  href="{% url 'order_list' %}"> Pedidos </a>
+              </li>
+              <a class="btn btn-danger" href="{% url 'logout' %}" > Salir </a>
+            {% else %}
+              <a class="btn btn-primary" href="{% url 'login' %}"> Iniciar Sesion </a>
+              <a class="btn btn-secondary" href="{% url 'register' %}"> Registrarse </a>
+            {% endif %}
         </nav>
+
         {% if messages %}
           {% for message in messages %}
               {%if message.tags == 'error' %}
@@ -28,6 +35,7 @@
               {% endif %}
           {% endfor %}
       {% endif %}
+
       {% block content %}{% endblock %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
