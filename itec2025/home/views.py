@@ -30,6 +30,9 @@ def register_view(request):
         template_name='accounts/register.html'
     )
 
+def login_view(request):
+    return render(request, "accounts/login.html") 
+
 def _validate_pass(pass1, pass2):
     print(pass1==pass2)
     pass1 == pass2
