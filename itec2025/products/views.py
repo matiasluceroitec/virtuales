@@ -1,9 +1,11 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 
+
 from products.models import Product
 from products.services.products import ProductService
 
+# DEPRECADO
 def product_list(request):
     all_products = ProductService.get_all()
     total_price = ProductService.sum_total_price(all_products)
@@ -45,7 +47,13 @@ def create_product(request):
         'products/create.html'
     )
 
-
 def order_list(request):
     return render(request, 'orders/list.html')
 
+## NUEVAS VISTAS BASADAS EN CLASES
+from django.views.generic import ListView
+
+class ProductList(ListView):
+    model = Product # Product.objects.all()
+    template_name = 'products/list.html'
+    context_object_name = 'products'
