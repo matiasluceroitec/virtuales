@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 
 from products.models import Product
@@ -27,5 +28,24 @@ def product_detail(request, product_id):
         )
     )
 
+def create_product(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        stock = request.POST.get('stock')
+        price = request.POST.get('price')
+
+        Product.objects.create(
+            name=name,
+            stock=int(stock),
+            price=float(price)
+        )
+        messages.success(request, 'Producto Creado')
+    return render(
+        request,
+        'products/create.html'
+    )
+
+
 def order_list(request):
     return render(request, 'orders/list.html')
+
