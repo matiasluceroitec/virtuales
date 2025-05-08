@@ -2,7 +2,7 @@
 
 {% block content %}
 <h4>Crear Producto</h4>
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         <input type="text" name="name" placeholder="Nombre del Producto">
         <input type="number" name="stock" placeholder="Stock">
