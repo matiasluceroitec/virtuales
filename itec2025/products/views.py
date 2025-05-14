@@ -10,7 +10,7 @@ from django.views.generic import (
 from django.urls import reverse_lazy
 
 from products.models import Product, Order
-
+from products.forms import ProductForm
 
 class ProductList(ListView):
     model = Product # Product.objects.all()
@@ -54,15 +54,14 @@ class ProductCreate(View):
 
 
 class ProductCreateView(CreateView):
-    model = Product
+    form_class = ProductForm
     template_name = 'products/create_from_class.html'
     success_url = reverse_lazy('product_list')
-    fields = ['name', 'price', 'stock']
-
-    def form_valid(self, form):
-        messages.success(self.request, "Producto Creado")
-        return super().form_valid(form)
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['creador_de_productos'] = 'Creador de productos' 
+        return context
 
 class OrderList(ListView):
     model = Order

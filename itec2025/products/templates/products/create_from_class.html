@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Crear nuevo producto</h2>
+    <h2>{{creador_de_productos}}</h2>
+   
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
