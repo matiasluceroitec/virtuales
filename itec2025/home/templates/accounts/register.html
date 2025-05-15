@@ -10,49 +10,26 @@
         <div class="col-4">
             <form method="post">
                 {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
                 <div class="form-group">
-                  <label for="username"> Nombre de Usuario </label>
-                  <input 
-                    type="text" 
-                    name="username" 
-                    id="username" 
-                    class="form-control" 
-                    placeholder="Escriba su nombre de usuario" 
-                    required
-                    >  
+                  <label for="username"> {{form.username.label_tag}} </label>
+                  {{ form.username }}
+                  {{ form.username.errors }}
                 </div>
                 <div class="form-group">
-                    <label for="password1"> Contraseña 1 </label>
-                    <input 
-                      type="password"
-                      name="password1" 
-                      id="password1" 
-                      class="form-control" 
-                      placeholder="Escriba su contraseña" 
-                      required
-                    >  
+                    <label for="password1"> {{form.password1.label_tag}} </label>
+                    {{ form.password1 }}
                 </div>
                 <div class="form-group">
-                    <label for="password2"> Repita su contraseña </label>
-                    <input 
-                      type="password"
-                      name="password2" 
-                      id="password2" 
-                      class="form-control" 
-                      placeholder="Repita su contraseña" 
-                      required
-                    >  
+                    <label for="password2"> {{form.password2.label_tag}} </label>
+                    {{ form.password2 }}
                 </div>
                 <div class="form-group">
-                    <label for="password2"> Email </label>
-                    <input 
-                      type="email"
-                      name="email" 
-                      id="email" 
-                      class="form-control" 
-                      placeholder="Email" 
-                      required
-                    >  
+                    <label for="email"> {{form.email.label_tag}} </label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
                 </div>
                     <button type="submit" class="btn btn-success mt-5"> Registrarme </button>
                 </form>

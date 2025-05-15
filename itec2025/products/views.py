@@ -63,6 +63,7 @@ class ProductCreateView(CreateView):
         context['creador_de_productos'] = 'Creador de productos' 
         return context
 
+
 class OrderList(ListView):
     model = Order
     template_name = 'orders/list.html'
