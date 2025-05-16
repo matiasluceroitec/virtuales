@@ -9,8 +9,17 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 
+<<<<<<< HEAD
 from products.models import Product, Order
 from products.forms import ProductForm, OrderForm
+=======
+from products.models import Product, Order, OrderDetail
+from products.forms import (
+    OrderDetailForm,
+    OrderForm,
+    ProductForm
+)
+>>>>>>> 15-5-25-com-b
 
 class ProductList(ListView):
     model = Product # Product.objects.all()
@@ -69,8 +78,13 @@ class OrderList(ListView):
     template_name = 'orders/list.html'
     context_object_name = 'orders'
 
-
 class OrderCreate(CreateView):
+    model = Order
     form_class = OrderForm
     template_name = 'orders/create.html'
     success_url = reverse_lazy('order_create')
+
+class OrderDetailCreate(CreateView):
+    form_class = OrderDetailForm
+    template_name = 'orders_detail/create.html'
+    success_url = reverse_lazy('order_detail_create')
