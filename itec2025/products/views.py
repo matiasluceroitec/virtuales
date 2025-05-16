@@ -9,17 +9,12 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 
-<<<<<<< HEAD
-from products.models import Product, Order
-from products.forms import ProductForm, OrderForm
-=======
 from products.models import Product, Order, OrderDetail
 from products.forms import (
     OrderDetailForm,
     OrderForm,
     ProductForm
 )
->>>>>>> 15-5-25-com-b
 
 class ProductList(ListView):
     model = Product # Product.objects.all()
