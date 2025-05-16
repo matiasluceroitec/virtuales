@@ -1,12 +1,14 @@
 from django.urls import path
 
 from products.views import (
+    OrderCreate,
+    OrderDetailCreate,
+    OrderList, 
     ProductCreate,
     ProductCreateView,
     ProductDelete,
     ProductDetail,
     ProductList,
-    OrderList, 
 )
 
 urlpatterns = [
@@ -34,5 +36,15 @@ urlpatterns = [
         route='order_list/', 
         view=OrderList.as_view(), 
         name='order_list'
+    ),
+    path(
+        route='order_create/', 
+        view=OrderCreate.as_view(), 
+        name='order_create'
+    ),
+    path(
+        route='order_detail_create/', 
+        view=OrderDetailCreate.as_view(), 
+        name='order_detail_create'
     ),
 ]
