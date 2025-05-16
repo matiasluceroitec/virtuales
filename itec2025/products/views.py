@@ -10,7 +10,7 @@ from django.views.generic import (
 from django.urls import reverse_lazy
 
 from products.models import Product, Order
-from products.forms import ProductForm
+from products.forms import ProductForm, OrderForm
 
 class ProductList(ListView):
     model = Product # Product.objects.all()
@@ -68,3 +68,9 @@ class OrderList(ListView):
     model = Order
     template_name = 'orders/list.html'
     context_object_name = 'orders'
+
+
+class OrderCreate(CreateView):
+    form_class = OrderForm
+    template_name = 'orders/create.html'
+    success_url = reverse_lazy('order_create')

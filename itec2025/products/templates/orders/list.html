@@ -8,4 +8,6 @@
     {% empty %}
         <li> Empty Orders</li>  
     {% endfor %}
+
+    <a href="{% url 'order_create' %}">Crear Orden</a>
 {% endblock %}
