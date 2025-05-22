@@ -56,13 +56,11 @@ class OrderDetailForm(forms.ModelForm):
         fields = ['order', 'product', 'quantity']
 
         widgets = {
-            'order': forms.Select(
-                attrs={'class': 'form-control'}
-            ),
+            'order': forms.HiddenInput(),
             'product': forms.Select(
-                attrs={'class': 'form-control'}
+                attrs={'class': 'form-control w-50'}
             ),
             'quantity': forms.NumberInput(
-                attrs={'class': 'form-control'}
+                attrs={'class': 'form-control w-25'}
             )
         }
