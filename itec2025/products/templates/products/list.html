@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 {% block title %} Products List {% endblock %}
 
 {% block content %}
 <table class="table">
   <thead>
     <tr>
-      <th>Product</th>
-      <th>Price</th>
+      <th>{% trans 'Product' %}</th>
+      <th>{% trans 'Price' %}</th>
       <th>Stock</th>
       <th>Action</th>
     </tr>

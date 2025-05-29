@@ -1,3 +1,5 @@
+
+{% load i18n %}
 {% load static %}
 
 <!doctype html>
@@ -29,6 +31,14 @@
               <a class="btn btn-primary" href="{% url 'login' %}"> Iniciar Sesion </a>
               <a class="btn btn-secondary" href="{% url 'register' %}"> Registrarse </a>
             {% endif %}
+
+            <form action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <select name="language" id="" class="form-control" onchange="this.form.submit()">
+                <option value="es" {% if LANGUAGE_CODE == 'es' %} selected {% endif %}>ES</option>
+                <option value="en" {% if LANGUAGE_CODE == 'en' %} selected {% endif %}>EN</option>
+              </select>
+            </form>
         </nav>
 
         {% if messages %}
