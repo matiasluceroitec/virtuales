@@ -43,8 +43,8 @@ urlpatterns = [
         name='order_create'
     ),
     path(
-        route='order_detail_create/', 
+        route='order/<int:order_id>/detail/', 
         view=OrderDetailCreate.as_view(), 
-        name='order_detail_create'
+        name='order_detail'
     ),
 ]

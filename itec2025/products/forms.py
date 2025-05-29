@@ -11,13 +11,12 @@ from products.models import (
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'price', 'stock']
+        fields = ['name', 'price', 'stock', 'image']
         widgets = {
             'name': forms.TextInput(
                 attrs={
                     'class':'form-control w-25 personalizado',
-                    'placeholder': 'Ingrese el nombre del producto',
-                    'style':'background: aquamarine'
+                    'placeholder': 'Ingrese el nombre del producto'
                 }
             )
         }
@@ -56,13 +55,11 @@ class OrderDetailForm(forms.ModelForm):
         fields = ['order', 'product', 'quantity']
 
         widgets = {
-            'order': forms.Select(
-                attrs={'class': 'form-control'}
-            ),
+            'order': forms.HiddenInput(),
             'product': forms.Select(
-                attrs={'class': 'form-control'}
+                attrs={'class': 'form-control w-50'}
             ),
             'quantity': forms.NumberInput(
-                attrs={'class': 'form-control'}
+                attrs={'class': 'form-control w-25'}
             )
         }
