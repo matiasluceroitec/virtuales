@@ -4,7 +4,11 @@
 
 {% block content %}
     {% for order in orders %}
-        <li>Order # {{order.id}} - Customer {{order.customer.name}} </li>
+        <li>
+            <a href="{% url 'order_detail' order.id%}">
+                Order # {{order.id}} - Customer {{order.customer.name}} 
+            </a>
+        </li>
     {% empty %}
         <li> Empty Orders</li>  
     {% endfor %}

@@ -3,9 +3,48 @@
 {% block title %} Orders Detail Create {% endblock %}
 
 {% block content %}
+   <h5> Detalle de la orden numero {{order.id}}, del cliente {{order.customer}}</h5>
+   <span> Fecha de creacion {{ order.date }}</span>
+
    <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit"> Guardar </button>
+        <div class="form-row">
+            <div class="col">
+               {{ form.product.label_tag}}
+               {{ form.product }}
+            </div>
+            <div class="col">
+               {{ form.quantity.label_tag}}
+               {{ form.quantity }}
+            </div>
+        </div>
+        {{ form.order }}
+        <button type="submit" class="btn btn-info mt-4"> Guardar </button>
    </form>
+
+   <hr>
+
+   <h4> Lista de detalle </h4>
+   <table class="table table-bordered">
+      <thead>
+         <tr>
+            <td>Producto</td>
+            <td>Precio</td>
+            <td>Cantidad</td>
+            <td>Total</td>
+         </tr>
+      </thead>
+      <tbody>
+         {% for detalle in details %}
+         <tr>
+            <td>{{ detalle.product }}</td>
+            <td>$ {{ detalle.product.price }}</td>
+            <td>{{ detalle.quantity }}</td>
+            <td>$ {{ detalle.subtotal }}</td>
+            <td></td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+   <h5 class="text-right pr-5"> Total acumulado : $ {{ total }}</h5>
 {% endblock %}

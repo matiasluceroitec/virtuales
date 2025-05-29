@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,11 +12,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/estilo.css' %}" crossorigin="anonymous">
+
   </head>
   <body>
         <nav class="navbar navbar-dark bg-dark">
             <a class="navbar-brand" href="{% url 'index' %}"> 
-            <img src="{% static 'img/logo.png' %}" alt="">  
+              <img src="{% static 'img/logo.png' %}">  
             </a>
             {% if user.is_authenticated %}
               <li>
@@ -28,6 +31,14 @@
               <a class="btn btn-primary" href="{% url 'login' %}"> Iniciar Sesion </a>
               <a class="btn btn-secondary" href="{% url 'register' %}"> Registrarse </a>
             {% endif %}
+
+            <form action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <select name="language" id="" class="form-control" onchange="this.form.submit()">
+                <option value="es" {% if LANGUAGE_CODE == 'es' %} selected {% endif %}>ES</option>
+                <option value="en" {% if LANGUAGE_CODE == 'en' %} selected {% endif %}>EN</option>
+              </select>
+            </form>
         </nav>
 
         {% if messages %}

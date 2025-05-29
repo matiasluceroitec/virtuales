@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.views import View
-
 from home.forms import LoginForm, RegisterForm
+
+# Traduccion
+from django.utils.translation import activate, get_language, deactivate
 
 
 class HomeView(View):
