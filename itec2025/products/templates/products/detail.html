@@ -8,6 +8,11 @@
         <li>
             {% trans 'Price' %}: {{ product.price }}
             Stock: {{ product.stock }}
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="">
+            {% else %}
+            <span> No tiene imagen</span>
+            {% endif %}
         </li>
     </ul>
 {% endblock %}

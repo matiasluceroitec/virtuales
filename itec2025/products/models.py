@@ -7,6 +7,7 @@ class Product(models.Model):
     name = models.CharField(_("Product name"), max_length=255)
     price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2)
     stock = models.IntegerField()
+    image = models.ImageField(upload_to='products/', null=True, blank=True)
 
     def __str__(self):
         return self.name
