@@ -2,12 +2,25 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-# Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(_("Product name"), max_length=255)
     price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2)
     stock = models.IntegerField()
     image = models.ImageField(upload_to='products/', null=True, blank=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name='products',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.name
