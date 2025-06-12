@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from simple_history.models import HistoricalRecords
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -57,6 +59,32 @@ class OrderDetail(models.Model):
         on_delete=models.CASCADE,
     )
     quantity = models.IntegerField()
+    history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.quantity} - {self.product}"
+        return str(self.id)
+
+
+class OrderDetailAuditLog(models.Model):
+    """
+    Modelo para registrar los cambios en OrderDetail
+    """
+    order_detail = models.ForeignKey(
+        OrderDetail,
+        on_delete=models.CASCADE,
+        related_name='logs'
+    )
+    action = models.CharField(
+        max_length=12,
+        choices=[
+            ('created', _('Created')),
+            ('updated', _('Updated'))
+        ],
+    )
+    quantity = models.IntegerField()
+    product_name = models.CharField(
+        max_length=255,
+    )
+    timestamp = models.DateTimeField(
+        auto_now_add=True
+    )

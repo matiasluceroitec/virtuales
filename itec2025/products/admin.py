@@ -6,6 +6,8 @@ from products.models import (
     Category,
     Customer, 
     Order, 
+    OrderDetail,
+    OrderDetailAuditLog,
     Product,
 )
 
@@ -43,3 +45,13 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'customer', 'date')
+
+
+@admin.register(OrderDetail)
+class OrderDetailAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity')
+
+@admin.register(OrderDetailAuditLog)
+class OrderDetailAuditLogAdmin(admin.ModelAdmin):
+    list_display = ['order_detail', 'product_name', 'quantity', 'timestamp', 'action']
+    readonly_fields = list_display
