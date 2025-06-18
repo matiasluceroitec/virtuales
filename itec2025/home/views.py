@@ -1,7 +1,10 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.views import View
 from home.forms import LoginForm, RegisterForm
 
@@ -32,11 +35,28 @@ class RegisterView(View):
         form = RegisterForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data["username"])
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=form.cleaned_data["username"],
                 password=form.cleaned_data['password1'],
                 email=form.cleaned_data['email']
             )
+
+            subject = "Registro exitoso"
+            message = render_to_string(
+                'mails/welcome.html',
+                {'email':user.email}
+            )
+            email = EmailMessage(
+                subject=subject,
+                body=message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email]
+            )
+            email.content_subtype = 'html'
+            email.send(
+                fail_silently=False
+            )
+
             messages.success(
                 request,
                 "Usuario registrado correctamente"
