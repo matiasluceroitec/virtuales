@@ -1,4 +1,6 @@
-from products.models import Product
+from typing import Optional
+
+from products.models import Category, Product
 
 
 class ProductRepository:
@@ -11,17 +13,19 @@ class ProductRepository:
         name: str, 
         price: float, 
         stock: int,
+        category: Optional[Category] = None
     ) -> Product:
         return Product.objects.create(
             name=name,
             price=price,
             stock=stock,
+            category=category
         )
 
     @staticmethod
     def delete(product: Product) -> bool:
         try:
-            Product.delete()
+            product.delete()
         except Product.DoesNotExist:
             raise ValueError("El producto no existe")
         
