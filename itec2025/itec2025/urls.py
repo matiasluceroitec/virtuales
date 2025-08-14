@@ -27,7 +27,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('products/', include('products.urls')),
     path('', include('home.urls')),
-    path('set_language', set_language, name="set_language")
+    path('set_language', set_language, name="set_language"),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('api.urls'))
 ]
 
 if settings.DEBUG == True:
