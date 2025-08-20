@@ -1,6 +1,10 @@
 from django.urls import path
 
-from api.views import UserListCreateView, UserRetrieveUpdateDestroyView
+from api.views import (
+    CustomerListCreateView,
+    UserListCreateView, 
+    UserRetrieveUpdateDestroyView, 
+)
 
 urlpatterns = [
     #User
@@ -9,5 +13,9 @@ urlpatterns = [
     ),
     path(
         "users/<int:pk>/", UserRetrieveUpdateDestroyView.as_view(), name="users-detail"
+    ),
+    # Customer
+    path(
+        "customer/", CustomerListCreateView.as_view(), name="customer-list"
     ),
 ]
