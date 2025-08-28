@@ -38,3 +38,28 @@ def test_get_all_users(api_client):
             "is_active": False            
         }
     ]
+
+
+@pytest.mark.django_db
+def test_get_all_users_empty_users(api_client):
+    url = reverse('users-list')
+    response = api_client.get(url)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert result == []
+
+
+@pytest.mark.django_db
+def test_get_all_users_with_11_user(api_client):
+    for x in range(11):
+        User.objects.create(
+            username=f"user{x}", 
+            email=f"u{x}@tests.com"
+        )
+    url = reverse('users-list')
+    response = api_client.get(url)
+    result = response.json()
+
+    assert response.status_code == 200
+    assert len(result) == 11
