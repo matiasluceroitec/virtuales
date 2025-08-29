@@ -28,6 +28,8 @@ jobs:
 
       - name: Upload to Codecov  # Sube el reporte; requiere CODECOV_TOKEN si el repo es privado
         uses: codecov/codecov-action@v5
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}  # Evita fallar en PRs desde forks
         with:
           files: ./coverage.xml
           fail_ci_if_error: true  # Falla si no puede subir (opcional)
+          token: ${{ secrets.CODECOV_TOKEN }}  # Opcional: necesario en repos privados o si tokenless no aplica
