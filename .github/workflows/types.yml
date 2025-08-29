@@ -1,21 +1,21 @@
-name: Types
+name: Types  # Chequeo de tipos con mypy
 
-on:  # Corre en cada PR
-  pull_request:
+on:  # Disparadores del workflow
+  pull_request:  # Se ejecuta en cada PR
 
 jobs:
-  mypy:
-    name: mypy (type checking)
-    runs-on: ubuntu-latest
+  mypy:  # Job de análisis estático de tipos
+    name: mypy (type checking)  # Título del job
+    runs-on: ubuntu-latest  # Runner de GitHub
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Trae el código al runner
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Prepara Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Versión objetivo
 
       - name: Install mypy and stubs  # mypy + stubs de Django
         run: |

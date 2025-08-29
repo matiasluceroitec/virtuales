@@ -1,26 +1,26 @@
-name: Docs
+name: Docs  # Nombre visible del workflow en GitHub
 
-on:
-  pull_request:
+on:  # Eventos que disparan el workflow
+  pull_request:  # Corre en cada PR para verificar la doc
 
 jobs:
-  docs:
-    name: Build MkDocs
-    runs-on: ubuntu-latest
+  docs:  # Identificador del job
+    name: Build MkDocs  # Título del job
+    runs-on: ubuntu-latest  # Máquina virtual proporcionada por GitHub
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Descarga el código del repo en el runner
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Configura la versión de Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Usamos 3.12 para consistencia
 
-      - name: Install docs deps
+      - name: Install docs deps  # Instala MkDocs y tema Material
         run: |
           pip install mkdocs mkdocs-material
 
-      - name: Build docs  # --strict falla si hay warnings graves
+      - name: Build docs  # Construye la doc; --strict falla ante warnings críticos
         run: |
           mkdocs build --strict

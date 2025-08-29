@@ -1,21 +1,21 @@
-name: Django migrations check
+name: Django migrations check  # Valida que no haya migraciones pendientes
 
-on:  # Corre en cada PR
-  pull_request:
+on:  # Eventos que disparan el workflow
+  pull_request:  # Ejecuta en cada PR
 
 jobs:
-  migrations:
-    name: Check pending migrations
-    runs-on: ubuntu-latest
+  migrations:  # Job que revisa migraciones
+    name: Check pending migrations  # Título del job
+    runs-on: ubuntu-latest  # Runner hospedado por GitHub
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Descarga el repositorio
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Prepara Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Versión objetivo
 
       - name: Install deps  # Django y dependencias del proyecto
         run: |

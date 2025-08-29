@@ -1,36 +1,36 @@
-name: Docker image
+name: Docker image  # Construye y publica imagen Docker en GHCR
 
-on:
+on:  # Disparadores
   push:
-    tags: ['v*.*.*']  # Publica imagen al crear un tag semántico
+    tags: ['v*.*.*']  # Corre solo cuando se pushea un tag semántico (vX.Y.Z)
 
 jobs:
-  docker:
-    name: Build & Push to GHCR
-    runs-on: ubuntu-latest
-    permissions:
+  docker:  # Job de build/push
+    name: Build & Push to GHCR  # GitHub Container Registry
+    runs-on: ubuntu-latest  # Runner
+    permissions:  # Permisos para usar GHCR
       contents: read
       packages: write  # Permite publicar en ghcr.io
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Descarga el repo (Dockerfile/context)
         uses: actions/checkout@v4
 
-      - name: Setup Docker Buildx
+      - name: Setup Docker Buildx  # Habilita builder moderno (caché, multi-arch)
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to GHCR  # Usa el token del repo
+      - name: Login to GHCR  # Autenticación con GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push  # Construye y publica la imagen
         uses: docker/build-push-action@v6
         with:
-          context: .  # Carpeta del Dockerfile
-          push: true  # Publica imagen
+          context: .  # Carpeta con Dockerfile
+          push: true  # Publica la imagen tras build
           tags: |
             ghcr.io/${{ github.repository }}:latest  # Etiqueta 'latest'
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}  # Etiqueta por tag
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}  # Etiqueta con el tag del commit

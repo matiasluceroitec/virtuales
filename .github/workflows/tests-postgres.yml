@@ -1,55 +1,55 @@
-name: Tests with Postgres
+name: Tests with Postgres  # Suite de tests usando base Postgres en CI
 
-on:
-  pull_request:
+on:  # Disparador del workflow
+  pull_request:  # Corre en cada PR
 
 jobs:
-  tests:
-    name: Django pytest (Postgres)
-    runs-on: ubuntu-latest
+  tests:  # Job de tests con servicio de DB
+    name: Django pytest (Postgres)  # Título del job
+    runs-on: ubuntu-latest  # Runner de GitHub
 
-    services:  # Levanta Postgres como servicio para el job
+    services:  # Define servicios acoplados al job
       postgres:
-        image: postgres:16
+        image: postgres:16  # Imagen oficial de Postgres
         env:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
           POSTGRES_DB: testdb
-        ports: ['5432:5432']  # Exponer para conectar desde el job
+        ports: ['5432:5432']  # Expone el puerto para que el job se conecte
         options: >-
-          --health-cmd="pg_isready -U test -d testdb"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd="pg_isready -U test -d testdb"  # Comando de healthcheck
+          --health-interval=10s  # Intervalo entre checks
+          --health-timeout=5s  # Timeout del check
+          --health-retries=5  # Reintentos antes de marcar unhealthy
 
-    env:
-      # Configurá tu settings.py para leer DATABASE_URL o variables equivalentes
+    env:  # Variables disponibles para todos los steps del job
+      # Ajustá tu settings.py para leer DATABASE_URL o variables equivalentes
       DATABASE_URL: postgresql://test:test@localhost:5432/testdb
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Descarga el repo
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Prepara Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install deps
+      - name: Install deps  # Instala dependencias del proyecto
         run: |
           pip install -r requirements.txt
 
-      - name: Wait for DB  # Espera a que Postgres esté listo
+      - name: Wait for DB  # Espera a que Postgres esté listo antes de migrar
         run: |
           for i in {1..30}; do
             pg_isready -h localhost -p 5432 && break
             sleep 1
           done
 
-      - name: Run migrations
+      - name: Run migrations  # Aplica migraciones al esquema de test
         run: |
           python itec2025/manage.py migrate --noinput
 
-      - name: Run tests
+      - name: Run tests  # Ejecuta la suite de tests
         run: |
           pytest -q

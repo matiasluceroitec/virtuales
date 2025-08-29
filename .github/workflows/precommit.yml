@@ -1,23 +1,23 @@
-name: Pre-commit
+name: Pre-commit  # Ejecuta los hooks de pre-commit en CI
 
-on:
-  pull_request:
+on:  # Disparadores
+  pull_request:  # Corre en cada PR
 
 jobs:
-  precommit:
-    name: Run pre-commit hooks
-    runs-on: ubuntu-latest
+  precommit:  # Job dedicado a pre-commit
+    name: Run pre-commit hooks  # Título del job
+    runs-on: ubuntu-latest  # Runner
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Descarga el repo
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Prepara Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Versión
 
-      - name: Install pre-commit
+      - name: Install pre-commit  # Instala la herramienta
         run: |
           pip install pre-commit
 

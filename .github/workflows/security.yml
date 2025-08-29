@@ -1,29 +1,29 @@
-name: Security
+name: Security  # Auditorías de seguridad
 
-on:  # Corre en cada PR
-  pull_request:
+on:  # Disparadores
+  pull_request:  # Ejecuta en PRs
 
 jobs:
-  deps_vulns:
-    name: Dependencies & code security
-    runs-on: ubuntu-latest
+  deps_vulns:  # Job de seguridad
+    name: Dependencies & code security  # Título del job
+    runs-on: ubuntu-latest  # Runner
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Trae el código
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Prepara Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Versión usada
 
-      - name: Install tools
+      - name: Install tools  # Instala herramientas de seguridad
         run: |
           pip install -r requirements.txt
           pip install pip-audit bandit
 
-      - name: Audit dependencies  # Vulnerabilidades en dependencias
-        run: pip-audit
+      - name: Audit dependencies  # Busca CVEs en dependencias
+        run: pip-audit  # Falla si hay vulnerabilidades
 
-      - name: Bandit scan  # Análisis estático de seguridad
-        run: bandit -q -r .
+      - name: Bandit scan  # Análisis estático del código Python
+        run: bandit -q -r .  # Recorre el repo y reporta issues

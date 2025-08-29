@@ -1,29 +1,29 @@
-name: Lint
+name: Lint  # Nombre del workflow de análisis de estilo
 
-on:  # Corre en cada PR
-  pull_request:
+on:  # Eventos que activan el workflow
+  pull_request:  # Ejecuta al crear/actualizar un PR
 
 jobs:
-  lint:
-    name: Ruff + Black  # Linter y formateador
-    runs-on: ubuntu-latest
+  lint:  # Identificador del job
+    name: Ruff + Black  # Linter y formateador de código
+    runs-on: ubuntu-latest  # Runner de GitHub
 
     steps:
-      - name: Checkout  # Descarga el repo
+      - name: Checkout  # Descarga el repo al runner
         uses: actions/checkout@v4
 
-      - name: Setup Python  # Configura Python
+      - name: Setup Python  # Prepara Python para instalar herramientas
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'  # Cachea dependencias
+          python-version: '3.12'  # Versión de Python
+          cache: 'pip'  # Cachea dependencias pip para acelerar
 
-      - name: Install tools  # Instala linters
+      - name: Install tools  # Instala linters Ruff y Black
         run: |
           pip install ruff black
 
-      - name: Ruff check  # Revisa estilo/errores simples
-        run: ruff check .
+      - name: Ruff check  # Linter y detección de problemas comunes
+        run: ruff check .  # Falla si encuentra errores
 
-      - name: Black check  # Verifica formato
-        run: black --check .
+      - name: Black check  # Verifica formateo sin modificar archivos
+        run: black --check .  # Falla si hay archivos no formateados

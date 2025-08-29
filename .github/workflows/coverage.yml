@@ -1,32 +1,32 @@
-name: Coverage
+name: Coverage  # Medición de cobertura y envío a Codecov
 
-on:  # Corre en cada PR
-  pull_request:
+on:  # Disparadores
+  pull_request:  # Ejecuta en PRs
 
 jobs:
-  coverage:
-    name: Pytest coverage + Codecov
-    runs-on: ubuntu-latest
+  coverage:  # Job de cobertura
+    name: Pytest coverage + Codecov  # Título del job
+    runs-on: ubuntu-latest  # Runner
 
     steps:
-      - name: Checkout
+      - name: Checkout  # Trae el código
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python  # Prepara Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Versión usada
 
-      - name: Install test deps
+      - name: Install test deps  # Instala dependencias de test y plugin de cobertura
         run: |
           pip install -r requirements.txt
           pip install pytest-cov
 
-      - name: Run tests with coverage
+      - name: Run tests with coverage  # Genera coverage.xml
         run: |
           pytest --cov=itec2025 --cov-report=xml  # genera coverage.xml en raíz
 
-      - name: Upload to Codecov  # Requiere CODECOV_TOKEN si el repo es privado
+      - name: Upload to Codecov  # Sube el reporte; requiere CODECOV_TOKEN si el repo es privado
         uses: codecov/codecov-action@v5
         with:
           files: ./coverage.xml
