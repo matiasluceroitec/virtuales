@@ -1,0 +1,31 @@
+name: Types
+
+on:  # Corre en cada PR
+  pull_request:
+
+jobs:
+  mypy:
+    name: mypy (type checking)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install mypy and stubs  # mypy + stubs de Django
+        run: |
+          pip install -r requirements.txt
+          pip install mypy django-stubs
+
+      - name: Run mypy  # Analiza tipos
+        run: |
+          mypy .
+        env:
+          # Si tu proyecto requiere configuraciones especiales de mypy,
+          # agregá un mypy.ini o pyproject.toml con sección [tool.mypy].
+          PYTHONUNBUFFERED: 1

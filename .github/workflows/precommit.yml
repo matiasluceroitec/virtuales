@@ -1,0 +1,26 @@
+name: Pre-commit
+
+on:
+  pull_request:
+
+jobs:
+  precommit:
+    name: Run pre-commit hooks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pre-commit
+        run: |
+          pip install pre-commit
+
+      - name: Run hooks  # Requiere .pre-commit-config.yaml en el repo
+        run: |
+          pre-commit run --all-files

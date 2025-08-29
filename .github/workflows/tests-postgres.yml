@@ -1,0 +1,55 @@
+name: Tests with Postgres
+
+on:
+  pull_request:
+
+jobs:
+  tests:
+    name: Django pytest (Postgres)
+    runs-on: ubuntu-latest
+
+    services:  # Levanta Postgres como servicio para el job
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports: ['5432:5432']  # Exponer para conectar desde el job
+        options: >-
+          --health-cmd="pg_isready -U test -d testdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      # Configurá tu settings.py para leer DATABASE_URL o variables equivalentes
+      DATABASE_URL: postgresql://test:test@localhost:5432/testdb
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+
+      - name: Wait for DB  # Espera a que Postgres esté listo
+        run: |
+          for i in {1..30}; do
+            pg_isready -h localhost -p 5432 && break
+            sleep 1
+          done
+
+      - name: Run migrations
+        run: |
+          python itec2025/manage.py migrate --noinput
+
+      - name: Run tests
+        run: |
+          pytest -q

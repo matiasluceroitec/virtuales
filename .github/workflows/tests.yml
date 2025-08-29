@@ -1,41 +1,41 @@
 name: Tests
 
-on:
-  pull_request:
-    branches: [ main ]
-  push:
-    branches: [ main ]
+on:  # Disparadores del workflow
+  pull_request:  # Cuando se abre/actualiza un PR
+    branches: [ main ]  # Solo PRs apuntando a main
+  push:  # Y cuando hay pushes directos
+    branches: [ main ]  # Solo si el push es a main
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+concurrency:  # Evita ejecuciones solapadas del mismo ref/workflow
+  group: ${{ github.workflow }}-${{ github.ref }}  # Agrupa por workflow y ref
+  cancel-in-progress: true  # Cancela la ejecución previa si llega una nueva
 
 jobs:
-  tests:
-    name: Django pytest
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+  tests:  # Job principal de tests
+    name: Django pytest  # Nombre legible del job
+    runs-on: ubuntu-latest  # Runner hospedado por GitHub
+    timeout-minutes: 15  # Límite para evitar jobs colgados
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout  # Descarga el repo en el runner
+        uses: actions/checkout@v4  # Descarga el repositorio en el runner del GitHub Actions
 
-      - name: Setup Python
+      - name: Setup Python  # Instala la versión de Python requerida
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-          cache: 'pip'
+          python-version: '3.12'  # Alineado con tu entorno local
+          cache: 'pip'  # Habilita cache de dependencias pip
 
-      - name: Install dependencies
+      - name: Install dependencies  # Instala dependencias del proyecto
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip  # Actualiza pip
+          pip install -r requirements.txt  # Instala paquetes necesarios
 
-      - name: Run tests (pytest)
+      - name: Run tests (pytest)  # Ejecuta la suite de tests con pytest
         env:
-          # Si tu settings.py lee variables de entorno críticas, decláralas aquí o usa GitHub Secrets.
-          # DJANGO_SETTINGS_MODULE está definido en itec2025/pytest.ini
-          PYTHONDONTWRITEBYTECODE: 1
-          PYTHONUNBUFFERED: 1
+          # Si tu settings.py requiere secretos/vars, declaralos aquí o via Secrets.
+          # DJANGO_SETTINGS_MODULE está definido en itec2025/pytest.ini para pytest.
+          PYTHONDONTWRITEBYTECODE: 1  # Evita .pyc en el workspace
+          PYTHONUNBUFFERED: 1  # Salida de logs sin buffer
         run: |
-          pytest -q
+          pytest -q  # Corre tests en modo quiet; falla el job si hay tests rojos

@@ -1,0 +1,26 @@
+name: Docs
+
+on:
+  pull_request:
+
+jobs:
+  docs:
+    name: Build MkDocs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install docs deps
+        run: |
+          pip install mkdocs mkdocs-material
+
+      - name: Build docs  # --strict falla si hay warnings graves
+        run: |
+          mkdocs build --strict

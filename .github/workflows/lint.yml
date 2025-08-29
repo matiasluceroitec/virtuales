@@ -1,0 +1,29 @@
+name: Lint
+
+on:  # Corre en cada PR
+  pull_request:
+
+jobs:
+  lint:
+    name: Ruff + Black  # Linter y formateador
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout  # Descarga el repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python  # Configura Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'  # Cachea dependencias
+
+      - name: Install tools  # Instala linters
+        run: |
+          pip install ruff black
+
+      - name: Ruff check  # Revisa estilo/errores simples
+        run: ruff check .
+
+      - name: Black check  # Verifica formato
+        run: black --check .
