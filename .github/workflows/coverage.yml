@@ -26,10 +26,16 @@ jobs:
         run: |
           pytest --cov=itec2025 --cov-report=xml  # genera coverage.xml en raíz
 
+      - name: Upload coverage artifact  # Guarda coverage.xml para inspección
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
       - name: Upload to Codecov  # Sube el reporte; requiere CODECOV_TOKEN si el repo es privado
         uses: codecov/codecov-action@v5
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}  # Evita fallar en PRs desde forks
         with:
           files: ./coverage.xml
-          fail_ci_if_error: true  # Falla si no puede subir (opcional)
+          fail_ci_if_error: false  # Temporal: no fallar mientras se configura Codecov
           token: ${{ secrets.CODECOV_TOKEN }}  # Opcional: necesario en repos privados o si tokenless no aplica
