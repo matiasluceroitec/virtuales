@@ -39,7 +39,7 @@ jobs:
   notify:
     name: Send email on success
     needs: tests
-    if: success()
+    if: success() && secrets.EMAIL_TO != ''
     runs-on: ubuntu-latest
     steps:
       - name: Send Mail (Mailtrap SMTP)
@@ -51,8 +51,8 @@ jobs:
           password: ${{ secrets.EMAIL_HOST_PASSWORD }}
           subject: "PR listo para mergear: #${{ github.event.pull_request.number }}"
           to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
-          secure: true
+          from: ${{ secrets.EMAIL_FROM != '' && secrets.EMAIL_FROM || 'CI <ci@mailtrap.test>' }}
+          secure: STARTTLS
           body: |
             El Pull Request #${{ github.event.pull_request.number }} pasó todos los pipelines.
 
