@@ -61,4 +61,4 @@ jobs:
             Autor: ${{ github.event.pull_request.user.login }}
             URL: ${{ github.event.pull_request.html_url }}
 
-            Estado: OK para mergear.
+            Estado: OK para mergear!
