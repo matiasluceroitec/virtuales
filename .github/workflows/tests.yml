@@ -1,0 +1,39 @@
+name:  Run Tests # Nombre del actions
+
+on: # Evento que dispara el actions
+    pull_request:
+        branches: [ main ] # Rama que dispara el actions
+    push: # Evento push que dispara el actions
+        branches: [ main ] # Rama que dispara el actions 
+
+concurrency: # Evita que se ejecuten múltiples acciones al mismo tiempo
+    group: ${{ github.workflow }}-${{ github.ref }} # Grupo de concurrencia basado en el nombre del workflow y la referencia de la rama
+    cancel-in-progress: true # Cancela las ejecuciones en progreso si se inicia una nueva
+
+jobs: # Jobs que se ejecutan en el actions
+    tests: # Job principal
+        name: Django Pytest # Nombre del job
+        runs-on: ubuntu-latest # Sistema operativo donde se ejecuta el job
+        time-out-minutes: 3
+        env:
+            PYTHONPATH: ${{ github.workspace }} /itec2025
+            PYTHONDONTWRITEBYTECODE: 1
+            PYTHONUNBUFFERED: 1
+
+        steps: # Pasos que se ejecutan en el job
+            - name: Checkout code # Nombre del paso
+              uses: actions/checkout@v3 # Acción para hacer checkout del código
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.12" # Versión de Python a usar
+                cache: "pip" # Cache para pip
+
+            - name: Install dependencies # Nombre del paso
+              run: | # Comandos a ejecutar
+                    python -m pip install --upgrade pip
+                    pip install requirements.txt 
+            - name: Run tests # Nombre del paso
+              run: | 
+                    pytest -q
