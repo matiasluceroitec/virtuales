@@ -307,3 +307,6 @@ def test_soft_delete_user_call_two_times(api_client):
     user.refresh_from_db()
     assert user.is_active is False
     assert response.json()['detail'] == f"User {user.username} deactivated"
+
+def tests_fail():
+    assert 1 in None
