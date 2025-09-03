@@ -1,59 +1,60 @@
-name: pr-tests-and-email
+name: pr-tests-and-email  # Nombre del workflow, aparece en la UI de Actions
 
-on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-    branches: [ main ]
+on:  # Eventos que disparan el workflow
+  pull_request:  # Se ejecuta en PRs
+    types: [opened, reopened, synchronize]  # Al abrir, reabrir o actualizar commits
+    branches: [ main ]  # Solo si el PR apunta a main
 
-jobs:
-  tests:
-    name: Run pytest
-    runs-on: ubuntu-latest
-    env:
-      DJANGO_SETTINGS_MODULE: itec2025.settings
-      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-      PYTHONDONTWRITEBYTECODE: 1
-      PYTHONUNBUFFERED: 1
-      PYTHONPATH: ${{ github.workspace }}/itec2025
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+jobs:  # Conjunto de trabajos que se ejecutan en el workflow
+  tests:  # Job 1: ejecutar tests
+    name: Run pytest  # Título del job en la UI
+    runs-on: ubuntu-latest  # Runner hospedado por GitHub
+    env:  # Variables de entorno para el job de tests
+      DJANGO_SETTINGS_MODULE: itec2025.settings  # Módulo de settings de Django
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}  # Secret para settings
+      PYTHONDONTWRITEBYTECODE: 1  # Evita archivos .pyc
+      PYTHONUNBUFFERED: 1  # Logs sin buffer
+      PYTHONPATH: ${{ github.workspace }}/itec2025  # Agrega el paquete del proyecto al sys.path
+    steps:  # Pasos a ejecutar dentro del job
+      - name: Checkout  # Descarga el repositorio
+        uses: actions/checkout@v4  # Acción oficial para hacer checkout del código
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Python  # Configura versión de Python
+        uses: actions/setup-python@v5  # Acción oficial para Python
         with:
-          python-version: '3.12'
+          python-version: '3.12'  # Versión a usar en el runner
 
-      - name: Cache pip
-        uses: actions/cache@v4
+      - name: Cache pip  # Cachea dependencias para acelerar
+        uses: actions/cache@v4  # Acción de cache
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          path: ~/.cache/pip  # Ruta del cache de pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}  # Clave basada en SO y requirements
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install dependencies  # Instala dependencias del proyecto
+        run: pip install -r requirements.txt  # Instala según requirements.txt
 
-      - name: Run tests
-        run: python -m pytest -q
+      - name: Run tests  # Ejecuta la suite de tests
+        run: python -m pytest -q  # Corre pytest en modo quiet
 
-  notify:
-    name: Send email on success
-    needs: tests
-    if: success() && secrets.EMAIL_TO != ''
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Mail (Mailtrap SMTP)
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.EMAIL_HOST }}
-          server_port: ${{ secrets.EMAIL_PORT }}
-          username: ${{ secrets.EMAIL_HOST_USER }}
-          password: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          subject: "PR listo para mergear: #${{ github.event.pull_request.number }}"
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM != '' && secrets.EMAIL_FROM || 'CI <ci@mailtrap.test>' }}
-          secure: STARTTLS
-          body: |
+  notify:  # Job 2: notificación por email
+    name: Send email on success  # Título del job de notificación
+    needs: tests  # Solo corre si el job "tests" terminó
+    if: success()  # Se ejecuta solo si tests pasó; la validación de destinatario va a nivel de step
+    runs-on: ubuntu-latest  # Runner hospedado
+    steps:  # Pasos del job de notificación
+      - name: Send Mail (Mailtrap SMTP)  # Enviar email vía Mailtrap
+        if: ${{ secrets.EMAIL_TO != '' }}  # Evita ejecutar si falta el destinatario
+        uses: dawidd6/action-send-mail@v3  # Acción para enviar correo SMTP
+        with:  # Parámetros de conexión y mensaje
+          server_address: ${{ secrets.EMAIL_HOST }}  # Host SMTP (Mailtrap sandbox)
+          server_port: ${{ secrets.EMAIL_PORT }}  # Puerto SMTP (2525 recomendado)
+          username: ${{ secrets.EMAIL_HOST_USER }}  # Usuario SMTP
+          password: ${{ secrets.EMAIL_HOST_PASSWORD }}  # Password SMTP
+          subject: "PR listo para mergear: #${{ github.event.pull_request.number }}"  # Asunto del correo
+          to: ${{ secrets.EMAIL_TO }}  # Destinatario (secret)
+          from: ${{ secrets.EMAIL_FROM != '' && secrets.EMAIL_FROM || 'CI <ci@mailtrap.test>' }}  # Remitente (secret o default)
+          secure: STARTTLS  # Cifrado STARTTLS para Mailtrap en 2525/587
+          body: |  # Cuerpo del correo en texto plano multilínea
             El Pull Request #${{ github.event.pull_request.number }} pasó todos los pipelines.
 
             Repo: ${{ github.repository }}
