@@ -15,6 +15,13 @@ jobs:
     name: Django pytest  # Nombre legible del job
     runs-on: ubuntu-latest  # Runner hospedado por GitHub
     timeout-minutes: 15  # Límite para evitar jobs colgados
+    env:
+      # Configuración común para importar el proyecto Django
+      PYTHONPATH: ${{ github.workspace }}/itec2025
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+      # SECRET_KEY para CI (definir en Secrets)
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     steps:
       - name: Checkout  # Descarga el repo en el runner
@@ -32,10 +39,5 @@ jobs:
           pip install -r requirements.txt  # Instala paquetes necesarios
 
       - name: Run tests (pytest)  # Ejecuta la suite de tests con pytest
-        env:
-          # Si tu settings.py requiere secretos/vars, declaralos aquí o via Secrets.
-          # DJANGO_SETTINGS_MODULE está definido en itec2025/pytest.ini para pytest.
-          PYTHONDONTWRITEBYTECODE: 1  # Evita .pyc en el workspace
-          PYTHONUNBUFFERED: 1  # Salida de logs sin buffer
         run: |
           pytest -q  # Corre tests en modo quiet; falla el job si hay tests rojos
