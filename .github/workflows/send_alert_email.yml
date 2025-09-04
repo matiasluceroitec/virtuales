@@ -35,7 +35,7 @@ jobs:
         run: python -m pytest -q # Corre tests en modo quiet falle el job
 
   notify: # Job numero 2
-    name: Send email on success
+    name:   ss
     needs: tests # Solo se ejecuta si tests termino
     if: success()
     runs-on: ubuntu-latest # Runner github
@@ -49,8 +49,8 @@ jobs:
           username: ${{ secrets.EMAIL_HOST_USER }}
           password: ${{ secrets.EMAIL_HOST_PASSWORD }}
           subject: "PR Listo para ser mergeado"
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
+          to: 'j.lucero@itecriocuarto.org.ar'
+          from: ${{ secrets.EMAIL_HOST }}
           secure: STARTTLS
           body: | 
               El pull request paso sin problema
