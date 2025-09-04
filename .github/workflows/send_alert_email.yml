@@ -33,3 +33,26 @@ jobs:
 
       - name: Run tests (Pytest)
         run: python -m pytest -q # Corre tests en modo quiet falle el job
+
+  notify: # Job numero 2
+    name: Send email on success
+    needs: tests # Solo se ejecuta si tests termino
+    if: success()
+    runs-on: ubuntu-latest # Runner github
+
+    steps: 
+      - name: Send Email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.EMAIL_HOST }}
+          server_port: ${{ secrets.EMAIL_PORT }}
+          username: ${{ secrets.EMAIL_HOST_USER }}
+          password: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          subject: "PR Listo para ser mergeado"
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
+          secure: STARTTLS
+          body: | 
+              El pull request paso sin problema
+              Autor del PR ${{ github.event.pull_request.user.login }}
+
