@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from products.models import Customer
+from products.models import Customer, Category, Product
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -62,3 +62,38 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ["name", "email", "phone"]
+
+
+class CategorySerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=255)
+
+    def create(self, validated_data):
+        return Category.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
+    
+class CategoryForProductSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+
+class ProductSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=255)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    stock = serializers.IntegerField()
+    image = serializers.SerializerMethodField()
+    category = CategoryForProductSerializer(read_only=True)
+    total = serializers.SerializerMethodField()
+
+    def get_total(self, obj):
+        return obj.price * obj.stock
+    
+    def get_image(self, obj):
+        if not obj.image:
+            return "No contiene imagen"
+        return obj.image.url
+
+
