@@ -1,14 +1,10 @@
-name: Run Tests # Nombre del Action
+name: Send Email Alert# Nombre del Action
 
 on: #Disparador
   pull_request: #Cuando se abre/actualiza un Pull Request(PR)
+    types: [opened, reopened, synchronize]
     branches: [ main ] #Solo cuando el PR apunte a main
-  push: #Cuando se hace un push directo a main
-    branches: [ main ]
 
-concurrency: #Esto evita ejecuciones solapadas
-  group: ${{ github.workflow }}-${{ github.ref }} # RunTest/main
-  cancel-in-progress: true #Cancela la que llego primero, le da prioridad a la entrante
 
 jobs:
   tests: #Job Principal
@@ -36,4 +32,4 @@ jobs:
             pip install -r requirements.txt
 
       - name: Run tests (Pytest)
-        run: pytest -q # Corre tests en modo quiet falle el job
+        run: python -m pytest -q # Corre tests en modo quiet falle el job
