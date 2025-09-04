@@ -1,4 +1,4 @@
-name: Send Email Alert# Nombre del Action
+name: Send Email Alert # Nombre del Action
 
 on: #Disparador
   pull_request: #Cuando se abre/actualiza un Pull Request(PR)
