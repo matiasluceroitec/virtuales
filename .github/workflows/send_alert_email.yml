@@ -1,0 +1,58 @@
+name: Send Email Alert # Nombre del Action
+
+on: #Disparador
+  pull_request: #Cuando se abre/actualiza un Pull Request(PR)
+    types: [opened, reopened, synchronize]
+    branches: [ main ] #Solo cuando el PR apunte a main
+
+
+jobs:
+  tests: #Job Principal
+    name: Django pytest #Nombre del job
+    runs-on: ubuntu-latest # Runner github
+    timeout-minutes: 3 #
+    env:
+      PYTHONPATH: ${{ github.workspace }}/itec2025 
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+
+    steps:
+      - name: Checkout # Clona el repo al runner
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Installed Dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+
+      - name: Run tests (Pytest)
+        run: python -m pytest -q # Corre tests en modo quiet falle el job
+
+  notify: # Job numero 2
+    name:   ss
+    needs: tests # Solo se ejecuta si tests termino
+    if: success()
+    runs-on: ubuntu-latest # Runner github
+
+    steps: 
+      - name: Send Email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.EMAIL_HOST }}
+          server_port: ${{ secrets.EMAIL_PORT }}
+          username: ${{ secrets.EMAIL_HOST_USER }}
+          password: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          subject: "PR Listo para ser mergeado"
+          to: 'j.lucero@itecriocuarto.org.ar'
+          from: ${{ secrets.EMAIL_HOST }}
+          secure: STARTTLS
+          body: | 
+              El pull request paso sin problema
+              Autor del PR ${{ github.event.pull_request.user.login }}
+
