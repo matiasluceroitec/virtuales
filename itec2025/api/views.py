@@ -1,4 +1,7 @@
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+
+from rest_framework.views import APIView
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
@@ -7,10 +10,12 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from api.serializers import (
+    CategorySerializer,
     CustomerSerializer,
+    ProductSerializer,
     UserSerializer, 
 )
-from products.models import Customer
+from products.models import Category, Customer, Product
 
 
 class UserListCreateView(ListCreateAPIView):
@@ -57,3 +62,62 @@ class CustomerListCreateView(ListCreateAPIView):
     """
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+
+class CategoryListCreateAPIView(APIView):
+    def get(self, request):
+        qs = Category.objects.all().order_by('id')
+        serializer = CategorySerializer(qs, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response(
+                CategorySerializer(instance).data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CategoryDetailAPIView(APIView):
+    def get_object(self, pk):
+        return get_object_or_404(Category, pk=pk)
+    
+    def get(self, request, pk):
+        instance = self.get_object(pk)
+        return Response(
+                CategorySerializer(instance).data,
+            )
+
+    def put(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = CategorySerializer(instance, data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response(
+                    CategorySerializer(instance).data
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        instance = self.get_object(pk)
+        serializer = CategorySerializer(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            instance = serializer.save()
+            return Response(
+                    CategorySerializer(instance).data
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        instance = self.get_object(pk)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class ProductListCreateApiView(APIView):
+    def get(self, request):
+        qs = Product.objects.all()
+        serializer = ProductSerializer(qs, many=True)
+        return Response(serializer.data)
