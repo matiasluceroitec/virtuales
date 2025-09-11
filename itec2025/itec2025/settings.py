@@ -158,3 +158,4 @@ REST_FRAMEWORK = {
     #'PAGE_SIZE': 10
 }
 
+VALID_TOKENS = "token-valido-1234"

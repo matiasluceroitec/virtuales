@@ -8,7 +8,10 @@ from rest_framework.generics import (
 )
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
+from api.mixins import AuthAdminView, AuthView
+from api.permissions import TokenPermission
 from api.serializers import (
     CategorySerializer,
     CustomerSerializer,
@@ -24,6 +27,7 @@ class UserListCreateView(ListCreateAPIView):
         return -> [UserSerializer]
     POST /api/users/ -> Crea usuario
     """
+    permission_classes = [IsAuthenticated] #TODOS LOS USUARIOS AUTENTICADOS PUEDEN VERLO
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -35,6 +39,7 @@ class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     PATCH /api/users/<pk> -> Actualizacion Parcial
     DETELE /api/users/<pk> -> Elimina
     """
+    permission_classes = [IsAdminUser] #SOLO USUSARIOS ADMIN PUEDEN ACCEDER (BASIC AUTH)
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -54,7 +59,7 @@ class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         )   
     
 
-class CustomerListCreateView(ListCreateAPIView):
+class CustomerListCreateView(ListCreateAPIView, AuthView):
     """
     GET /api/customer
         return -> [CustomerSerializer]
@@ -64,7 +69,7 @@ class CustomerListCreateView(ListCreateAPIView):
     serializer_class = CustomerSerializer
 
 
-class CategoryListCreateAPIView(APIView):
+class CategoryListCreateAPIView(APIView, AuthView):
     def get(self, request):
         qs = Category.objects.all().order_by('id')
         serializer = CategorySerializer(qs, many=True)
@@ -80,7 +85,7 @@ class CategoryListCreateAPIView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CategoryDetailAPIView(APIView):
+class CategoryDetailAPIView(APIView, AuthAdminView):
     def get_object(self, pk):
         return get_object_or_404(Category, pk=pk)
     
@@ -117,6 +122,7 @@ class CategoryDetailAPIView(APIView):
     
 
 class ProductListCreateApiView(APIView):
+    permission_classes = [TokenPermission]
     def get(self, request):
         qs = Product.objects.all()
         serializer = ProductSerializer(qs, many=True)
