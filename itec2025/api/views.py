@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
+from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
 )
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -125,5 +127,31 @@ class ProductListCreateApiView(APIView):
     permission_classes = [TokenPermission]
     def get(self, request):
         qs = Product.objects.all()
+        print(qs)
         serializer = ProductSerializer(qs, many=True)
         return Response(serializer.data)
+    
+
+class CustomerViewSet(viewsets.ModelViewSet, AuthView):
+    """
+    GENERA COMPLETAMENTE EL CRUD 
+    Y GENERA LAS RUTAS
+        - GET /api/customers-vs/
+        - POST /api/customers-vs/
+        - GET /api/customers-vs/{pk}
+        - PUT /api/customers-vs/{pk}
+        - PATCH /api/customers-vs/{pk}
+        - DELETE /api/customers-vs/{pk}
+    """
+
+    queryset = Customer.objects.all().order_by('id')
+    serializer_class = CustomerSerializer
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet, AuthView):
+    """
+    GENERA COMPLETAMENTE EL CRUD 
+    Y GENERA LAS RUTAS
+    """
+    queryset = Category.objects.all().order_by('id')
+    serializer_class = CategorySerializer
