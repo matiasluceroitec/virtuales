@@ -7,7 +7,9 @@ from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
 )
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import(
+    PageNumberPagination, LimitOffsetPagination
+)
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -74,8 +76,10 @@ class CustomerListCreateView(ListCreateAPIView, AuthView):
 class CategoryListCreateAPIView(APIView, AuthView):
     def get(self, request):
         qs = Category.objects.all().order_by('id')
-        serializer = CategorySerializer(qs, many=True)
-        return Response(serializer.data)
+        paginator = LimitOffsetPagination()
+        page = paginator.paginate_queryset(qs, request, view=self)
+        serializer = CategorySerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
     
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
