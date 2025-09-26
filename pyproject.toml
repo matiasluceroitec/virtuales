@@ -13,6 +13,7 @@ dependencies = [
     "django-filter==25.1",
     "django-simple-history==3.8.0",
     "djangorestframework==3.16.1",
+    "drf-spectacular",
     "dotenv-python==0.0.1",
     "exceptiongroup==1.2.2",
     "executing==2.2.0",
