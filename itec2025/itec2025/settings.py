@@ -160,4 +160,21 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API ITEC',
+    'DESCRIPTION': 'ACA VA LA DESCRIPCION',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': '/api/',
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SECURITY_SCHEMES': {
+        'Bearer': {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'Token'
+        }
+    }
+}
+
 VALID_TOKENS = "token-valido-1234"
