@@ -13,6 +13,12 @@ from rest_framework.pagination import(
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from drf_spectacular.utils import (
+    extend_schema_view, 
+    extend_schema,
+    OpenApiResponse
+)
+from drf_spectacular.types import OpenApiTypes
 
 from api.mixins import AuthAdminView, AuthView
 from api.permissions import TokenPermission
@@ -25,6 +31,30 @@ from api.serializers import (
 from products.models import Category, Customer, Product
 
 
+
+@extend_schema_view(
+    get=extend_schema(
+        summary="Listar Usuarios",
+        description="Devuelve una lista de usuarios paginada",
+        tags=["Usuarios"],
+        responses={
+            200: OpenApiResponse(
+                response=UserSerializer(many=True)
+            )
+        }
+    ),
+    post=extend_schema(
+        summary="Crea Usuario",
+        description="Crea un usuario",
+        tags=["Usuarios"],
+        request=UserSerializer,
+        responses={
+            201: OpenApiResponse(
+                response=UserSerializer
+            )
+        }
+    )
+)
 class UserListCreateView(ListCreateAPIView):
     """
     GET /api/users
@@ -35,6 +65,18 @@ class UserListCreateView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+@extend_schema_view(
+    delete=extend_schema(
+        summary="Elimina Usuario",
+        description="Elimina un usuario",
+        tags=["Usuarios"],
+        responses={
+            200: OpenApiResponse(
+                response=OpenApiTypes.OBJECT
+            )
+        }
+    )
+)
 class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """
     GET /api/users/<pk>
@@ -43,7 +85,7 @@ class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     PATCH /api/users/<pk> -> Actualizacion Parcial
     DETELE /api/users/<pk> -> Elimina
     """
-    permission_classes = [IsAdminUser] #SOLO USUSARIOS ADMIN PUEDEN ACCEDER (BASIC AUTH)
+    permission_classes = [IsAuthenticated] #SOLO USUSARIOS ADMIN PUEDEN ACCEDER (BASIC AUTH)
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
