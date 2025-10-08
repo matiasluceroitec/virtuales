@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'simple_history',
     'drf_spectacular',
     # Aplicaciones propias
+    'analytics',
     'products',
     'home',
     # API
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
                 #nombre-app.nombre-archivo.nombre-funcion
                 'itec2025.context_processors.get_time_data'
             ],
@@ -148,6 +150,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import matplotlib
+matplotlib.use('Agg')
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
