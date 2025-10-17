@@ -1,0 +1,15 @@
+[project]
+name = "itec2025-tools-cli"
+version = "0.1.0"
+description = "CLI para operar lad BD de itec2025(Django)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer",
+    "rich",
+    "tabulate",
+    "python-dotenv"
+]
+
+[project.scripts]
+itec = "cli.main:app"
